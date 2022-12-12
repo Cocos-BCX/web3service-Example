@@ -177,7 +177,7 @@ export class shop extends Component {
                 return;
             }
             uiManager.instance.showDialog('common/connetingWallet');
-            ethersHelper.instance.buyCar(carID).then(() => {
+            ethersHelper.instance.buyCar(carID, this.currentCarInfo.num).then(() => {
                 gameLogic.buyCar(carID);
                 let rewardInfo = {
                     rewardType: constant.REWARD_TYPE.CAR,
