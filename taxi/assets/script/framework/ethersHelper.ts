@@ -85,10 +85,18 @@ export default class ethersHelper {
             })
     }
 
-    buyCar(id: number): Promise<any> {
+    buyCar(id: number, cost: number): Promise<any> {
         const etherConfig = localConfig.instance.ethers;
-        return this.erc20.approve(etherConfig.carNftAdress, ethers.constants.MaxUint256)
-            .then(() => {
+        return this.erc20.allowance(this.signerAddress, etherConfig.carNftAdress)
+            .then((allowance: BigNumber) => {
+                let allowanceformat = ethers.utils.formatEther(allowance)
+                console.info("allowance", allowance, allowanceformat)
+                if (allowanceformat < cost) {
+                    return this.erc20.approve(etherConfig.carNftAdress, ethers.constants.MaxUint256)
+                } else {
+                    return true
+                }
+            }).then(() => {
                 return this.carNft.buyCar(id)
             }).then((buycar) => {
                 console.info("buycar", buycar)
